@@ -12,34 +12,35 @@ import java.util.concurrent.ExecutionException;
 
 public class EchoWsServer {
 
-    private final WebServer webServer;
+  private final WebServer webServer;
 
-    public EchoWsServer(WebServer webServer) throws IOException {
-        this.webServer = webServer;
-        webServer.add(new HttpToWebSocketHandler(new EchoHandler())).connectionExceptionHandler(new PrintStackTraceExceptionHandler());
+  public EchoWsServer(WebServer webServer) throws IOException {
+    this.webServer = webServer;
+    webServer.add(new HttpToWebSocketHandler(new EchoHandler())).connectionExceptionHandler(
+        new PrintStackTraceExceptionHandler());
+  }
+
+  public void start() throws ExecutionException, InterruptedException {
+    webServer.start().get();
+  }
+
+  public URI uri() throws IOException {
+    return webServer.getUri();
+  }
+
+  public void stop() throws ExecutionException, InterruptedException {
+    webServer.stop().get();
+  }
+
+  private static class EchoHandler extends BaseWebSocketHandler {
+    @Override
+    public void onMessage(WebSocketConnection connection, String msg) throws Exception {
+      connection.send(msg);
     }
 
-    public void start() throws ExecutionException, InterruptedException {
-        webServer.start().get();
+    @Override
+    public void onMessage(WebSocketConnection connection, byte[] msg) {
+      connection.send(msg);
     }
-
-    public URI uri() throws IOException {
-        return webServer.getUri();
-    }
-
-    public void stop() throws ExecutionException, InterruptedException {
-        webServer.stop().get();
-    }
-
-    private static class EchoHandler extends BaseWebSocketHandler {
-        @Override
-        public void onMessage(WebSocketConnection connection, String msg) throws Exception {
-            connection.send(msg);
-        }
-
-        @Override
-        public void onMessage(WebSocketConnection connection, byte[] msg) {
-            connection.send(msg);
-        }
-    }
+  }
 }

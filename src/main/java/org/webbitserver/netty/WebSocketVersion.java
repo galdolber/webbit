@@ -3,11 +3,11 @@ package org.webbitserver.netty;
 import org.jboss.netty.channel.ChannelHandler;
 
 public interface WebSocketVersion {
-    boolean matches();
+  boolean matches();
 
-    void prepareHandshakeResponse(NettyWebSocketConnection webSocketConnection);
+  void prepareHandshakeResponse(NettyWebSocketConnection webSocketConnection);
 
-    ChannelHandler createDecoder();
+  ChannelHandler createDecoder();
 
-    ChannelHandler createEncoder();
+  ChannelHandler createEncoder();
 }
