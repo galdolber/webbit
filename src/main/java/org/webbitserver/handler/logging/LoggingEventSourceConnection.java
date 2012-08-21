@@ -5,16 +5,16 @@ import org.webbitserver.wrapper.EventSourceConnectionWrapper;
 
 class LoggingEventSourceConnection extends EventSourceConnectionWrapper {
 
-    private final LogSink logSink;
+  private final LogSink logSink;
 
-    LoggingEventSourceConnection(LogSink logSink, EventSourceConnection connection) {
-        super(connection);
-        this.logSink = logSink;
-    }
+  LoggingEventSourceConnection(LogSink logSink, EventSourceConnection connection) {
+    super(connection);
+    this.logSink = logSink;
+  }
 
-    @Override
-    public EventSourceConnectionWrapper send(org.webbitserver.EventSourceMessage message) {
-        logSink.eventSourceOutboundData(this, message.build());
-        return super.send(message);
-    }
+  @Override
+  public EventSourceConnectionWrapper send(org.webbitserver.EventSourceMessage message) {
+    logSink.eventSourceOutboundData(this, message.build());
+    return super.send(message);
+  }
 }

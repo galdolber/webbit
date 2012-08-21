@@ -13,64 +13,68 @@ import org.webbitserver.wrapper.HttpResponseWrapper;
 
 public class LoggingHandler implements HttpHandler {
 
-    private final LogSink logSink;
+  private final LogSink logSink;
 
-    public LoggingHandler(LogSink logSink) {
-        this.logSink = logSink;
-    }
+  public LoggingHandler(LogSink logSink) {
+    this.logSink = logSink;
+  }
 
-    public LogSink logSink() {
-        return logSink;
-    }
+  public LogSink logSink() {
+    return logSink;
+  }
 
-    @Override
-    public void handleHttpRequest(final HttpRequest request, HttpResponse response, HttpControl control) throws Exception {
-        logSink.httpStart(request);
+  @Override
+  public void handleHttpRequest(final HttpRequest request, HttpResponse response,
+      HttpControl control) throws Exception {
+    logSink.httpStart(request);
 
-        HttpResponseWrapper responseWrapper = new HttpResponseWrapper(response) {
-            @Override
-            public HttpResponseWrapper end() {
-                logSink.httpEnd(request);
-                return super.end();
-            }
+    HttpResponseWrapper responseWrapper = new HttpResponseWrapper(response) {
+      @Override
+      public HttpResponseWrapper end() {
+        logSink.httpEnd(request);
+        return super.end();
+      }
 
-            @Override
-            public HttpResponseWrapper error(Throwable error) {
-                logSink.httpEnd(request);
-                logSink.error(request, error);
-                return super.error(error);
-            }
-        };
+      @Override
+      public HttpResponseWrapper error(Throwable error) {
+        logSink.httpEnd(request);
+        logSink.error(request, error);
+        return super.error(error);
+      }
+    };
 
-        HttpControlWrapper controlWrapper = new HttpControlWrapper(control) {
+    HttpControlWrapper controlWrapper = new HttpControlWrapper(control) {
 
-            private LoggingWebSocketConnection loggingWebSocketConnection;
-            private LoggingEventSourceConnection loggingEventSourceConnection;
+      private LoggingWebSocketConnection loggingWebSocketConnection;
+      private LoggingEventSourceConnection loggingEventSourceConnection;
 
-            @Override
-            public WebSocketConnection webSocketConnection() {
-                return loggingWebSocketConnection;
-            }
+      @Override
+      public WebSocketConnection webSocketConnection() {
+        return loggingWebSocketConnection;
+      }
 
-            @Override
-            public WebSocketConnection upgradeToWebSocketConnection(WebSocketHandler handler) {
-                loggingWebSocketConnection = new LoggingWebSocketConnection(logSink, super.webSocketConnection());
-                return super.upgradeToWebSocketConnection(new LoggingWebSocketHandler(logSink, loggingWebSocketConnection, handler));
-            }
+      @Override
+      public WebSocketConnection upgradeToWebSocketConnection(WebSocketHandler handler) {
+        loggingWebSocketConnection =
+            new LoggingWebSocketConnection(logSink, super.webSocketConnection());
+        return super.upgradeToWebSocketConnection(new LoggingWebSocketHandler(logSink,
+            loggingWebSocketConnection, handler));
+      }
 
-            @Override
-            public EventSourceConnection eventSourceConnection() {
-                return loggingEventSourceConnection;
-            }
+      @Override
+      public EventSourceConnection eventSourceConnection() {
+        return loggingEventSourceConnection;
+      }
 
-            @Override
-            public EventSourceConnection upgradeToEventSourceConnection(EventSourceHandler handler) {
-                loggingEventSourceConnection = new LoggingEventSourceConnection(logSink, super.eventSourceConnection());
-                return super.upgradeToEventSourceConnection(new LoggingEventSourceHandler(logSink, loggingEventSourceConnection, handler));
-            }
-        };
-        control.nextHandler(request, responseWrapper, controlWrapper);
-    }
-
+      @Override
+      public EventSourceConnection upgradeToEventSourceConnection(EventSourceHandler handler) {
+        loggingEventSourceConnection =
+            new LoggingEventSourceConnection(logSink, super.eventSourceConnection());
+        return super.upgradeToEventSourceConnection(new LoggingEventSourceHandler(logSink,
+            loggingEventSourceConnection, handler));
+      }
+    };
+    control.nextHandler(request, responseWrapper, controlWrapper);
+  }
 
 }

@@ -10,10 +10,10 @@ import org.webbitserver.handler.authentication.BasicAuthenticationHandler;
  * Simple handler that shows the user who they are logged in as, using plain ol' HTTP
  */
 public class WhoAmIHttpHandler implements HttpHandler {
-    @Override
-    public void handleHttpRequest(HttpRequest request, HttpResponse response, HttpControl control) throws Exception {
-        response.header("Content-type", "text/html")
-            .content("You are: " + request.data(BasicAuthenticationHandler.USERNAME))
-            .end();
-    }
+  @Override
+  public void handleHttpRequest(HttpRequest request, HttpResponse response, HttpControl control)
+      throws Exception {
+    response.header("Content-type", "text/html").content(
+        "You are: " + request.data(BasicAuthenticationHandler.USERNAME)).end();
+  }
 }

@@ -10,34 +10,35 @@ import java.util.concurrent.atomic.AtomicInteger;
  * created by the factory.
  */
 public class NamingThreadFactory implements ThreadFactory {
-    private static final AtomicInteger factoryCount = new AtomicInteger();
-    private final AtomicInteger threadCount = new AtomicInteger();
+  private static final AtomicInteger factoryCount = new AtomicInteger();
+  private final AtomicInteger threadCount = new AtomicInteger();
 
-    private final ThreadFactory factory;
-    private final String prefix;
+  private final ThreadFactory factory;
+  private final String prefix;
 
-    public NamingThreadFactory(ThreadFactory factory, String prefix) {
-        this.factory = factory;
-        this.prefix = prefix;
-        factoryCount.incrementAndGet();
-    }
+  public NamingThreadFactory(ThreadFactory factory, String prefix) {
+    this.factory = factory;
+    this.prefix = prefix;
+    factoryCount.incrementAndGet();
+  }
 
-    public NamingThreadFactory(String prefix) {
-        this(Executors.defaultThreadFactory(), prefix);
-    }
+  public NamingThreadFactory(String prefix) {
+    this(Executors.defaultThreadFactory(), prefix);
+  }
 
-    @Override
-    public Thread newThread(Runnable r) {
-        threadCount.incrementAndGet();
-        Thread thread = factory.newThread(r);
-        thread.setName(threadName());
-        return thread;
-    }
+  @Override
+  public Thread newThread(Runnable r) {
+    threadCount.incrementAndGet();
+    Thread thread = factory.newThread(r);
+    thread.setName(threadName());
+    return thread;
+  }
 
-    /**
-     * Override this method to customize thread name.
-     */
-    protected String threadName() {
-        return String.format("%s-%d-%d-thread", prefix, factoryCount.intValue(), threadCount.intValue());
-    }
+  /**
+   * Override this method to customize thread name.
+   */
+  protected String threadName() {
+    return String
+        .format("%s-%d-%d-thread", prefix, factoryCount.intValue(), threadCount.intValue());
+  }
 }

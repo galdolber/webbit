@@ -7,10 +7,10 @@ import org.webbitserver.netty.NettyWebServer;
  */
 public class Main {
 
-    public static void main(String[] args) throws Exception {
-        EchoWsServer server = new EchoWsServer(new NettyWebServer(9001));
-        server.start();
-        System.out.println("Echo server running on: " + server.uri());
-    }
+  public static void main(String[] args) throws Exception {
+    EchoWsServer server = new EchoWsServer(new NettyWebServer(9001));
+    server.start();
+    System.out.println("Echo server running on: " + server.uri());
+  }
 
 }

@@ -7,9 +7,9 @@ import org.webbitserver.HttpResponse;
 
 public class NotFoundHttpHandler implements HttpHandler {
 
-    @Override
-    public void handleHttpRequest(HttpRequest request, HttpResponse response, HttpControl control) {
-        response.status(404).end();
-    }
+  @Override
+  public void handleHttpRequest(HttpRequest request, HttpResponse response, HttpControl control) {
+    response.status(404).end();
+  }
 
 }

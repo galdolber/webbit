@@ -3,9 +3,9 @@ package org.webbitserver;
 import java.util.concurrent.Executor;
 
 public interface HttpConnection extends Executor, DataHolder {
-    HttpRequest httpRequest();
+  HttpRequest httpRequest();
 
-    HttpConnection close();
+  HttpConnection close();
 
-    Executor handlerExecutor();
+  Executor handlerExecutor();
 }
